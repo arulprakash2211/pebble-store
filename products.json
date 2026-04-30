@@ -1,0 +1,50 @@
+[
+  {
+    "name": "Lavender & Rose Clay",
+    "tag": "Bestseller",
+    "price": 180,
+    "description": "Calming lavender essential oil with pink rose clay. Perfect for sensitive and dry skin.",
+    "emoji": "🌸",
+    "colorClass": "pi1"
+  },
+  {
+    "name": "Activated Charcoal & Neem",
+    "tag": "Detox",
+    "price": 200,
+    "description": "Deep cleansing charcoal with antibacterial neem. Ideal for oily and acne-prone skin.",
+    "emoji": "🌿",
+    "colorClass": "pi2"
+  },
+  {
+    "name": "Honey & Oatmeal",
+    "tag": "Moisturising",
+    "price": 190,
+    "description": "Raw honey and colloidal oatmeal for a creamy, nourishing lather. Great for all skin types.",
+    "emoji": "🍯",
+    "colorClass": "pi3"
+  },
+  {
+    "name": "Eucalyptus & Spearmint",
+    "tag": "Refreshing",
+    "price": 195,
+    "description": "A cooling, invigorating bar with eucalyptus and spearmint essential oils. Perfect morning soap.",
+    "emoji": "🌲",
+    "colorClass": "pi4"
+  },
+  {
+    "name": "Turmeric & Sandalwood",
+    "tag": "Brightening",
+    "price": 210,
+    "description": "Traditional turmeric with grounding sandalwood. Brightens and evens skin tone naturally.",
+    "emoji": "☀️",
+    "colorClass": "pi5"
+  },
+  {
+    "name": "Coffee & Cocoa Butter",
+    "tag": "Exfoliating",
+    "price": 220,
+    "description": "Ground coffee for gentle exfoliation, with rich cocoa butter to leave skin silky smooth.",
+    "emoji": "🍂",
+    "colorClass": "pi6"
+  }
+]
