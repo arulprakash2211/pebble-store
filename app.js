@@ -1,22 +1,20 @@
 /* ── PEBBLE STORE – App Logic ── */
 
 const WHATSAPP_NUMBER = '919659451260';
-const FORMSPREE_ID    = 'xdabogzl';
 
 let allProducts = [];
 const cart = {}; // productId -> quantity
+let qrGenerated = false;
 
 // ── Load products from products.json ──
 async function loadProducts() {
   const grid = document.getElementById('productsGrid');
   const filtersEl = document.getElementById('categoryFilters');
-
   try {
     const res = await fetch('products.json');
     if (!res.ok) throw new Error('Failed to load products.json');
     allProducts = await res.json();
 
-    // Build category tabs from data
     const categories = ['All', ...new Set(allProducts.map(p => p.category))];
     filtersEl.innerHTML = categories.map((cat, i) =>
       `<button class="filter-btn ${i === 0 ? 'active' : ''}" data-cat="${cat}">${cat}</button>`
@@ -34,10 +32,8 @@ async function loadProducts() {
     });
 
     renderProducts(allProducts);
-
   } catch (err) {
     grid.innerHTML = '<p style="color:var(--clay);grid-column:1/-1">⚠️ Could not load products.json. Make sure it is in the same folder as index.html.</p>';
-    console.error(err);
   }
 }
 
@@ -84,18 +80,15 @@ function renderProducts(products) {
 function changeQty(id, delta) {
   const newQty = Math.max(0, (cart[id] || 0) + delta);
   if (newQty === 0) delete cart[id]; else cart[id] = newQty;
-
   const qtyEl = document.getElementById('qty-' + id);
   const btnEl = document.getElementById('btn-' + id);
   if (qtyEl) qtyEl.textContent = newQty;
-  if (btnEl) {
-    btnEl.textContent = newQty > 0 ? '✓ Added' : 'Add to Order';
-    btnEl.classList.toggle('selected', newQty > 0);
-  }
+  if (btnEl) { btnEl.textContent = newQty > 0 ? '✓ Added' : 'Add to Order'; btnEl.classList.toggle('selected', newQty > 0); }
   updateSummary();
+  qrGenerated = false; // reset QR so it regenerates with new order
 }
 
-// ── Add to order (sets qty=1 if zero, then scrolls to form) ──
+// ── Add to order ──
 function addToOrder(id) {
   if (!cart[id]) {
     cart[id] = 1;
@@ -105,10 +98,11 @@ function addToOrder(id) {
     if (btnEl) { btnEl.textContent = '✓ Added'; btnEl.classList.add('selected'); }
   }
   updateSummary();
+  qrGenerated = false;
   document.getElementById('order').scrollIntoView({ behavior: 'smooth' });
 }
 
-// ── Remove product from cart (called from summary ×) ──
+// ── Remove from cart ──
 function removeFromCart(id) {
   delete cart[id];
   const qtyEl = document.getElementById('qty-' + id);
@@ -116,9 +110,10 @@ function removeFromCart(id) {
   if (qtyEl) qtyEl.textContent = 0;
   if (btnEl) { btnEl.textContent = 'Add to Order'; btnEl.classList.remove('selected'); }
   updateSummary();
+  qrGenerated = false;
 }
 
-// ── Rebuild order summary table ──
+// ── Update order summary table ──
 function updateSummary() {
   const container = document.getElementById('summaryContent');
   const items = Object.entries(cart).filter(([, q]) => q > 0);
@@ -162,15 +157,14 @@ function updateSummary() {
       </tr></tfoot>
     </table>`;
 
-  // Sync hidden fields for email
   document.getElementById('hiddenOrder').value = items
     .map(([id, qty]) => { const p = allProducts.find(x => x.id === id); return p ? `${p.name} x${qty} = ₹${p.price * qty}` : ''; })
     .filter(Boolean).join(' | ');
   document.getElementById('hiddenTotal').value = `₹${total}`;
 }
 
-// ── Build WhatsApp message text ──
-function buildWhatsAppMsg() {
+// ── Build WhatsApp URL ──
+function buildWhatsAppUrl() {
   const name    = document.getElementById('custName').value.trim();
   const phone   = document.getElementById('phone').value.trim();
   const address = document.getElementById('address').value.trim();
@@ -192,10 +186,11 @@ function buildWhatsAppMsg() {
   if (address) msg += `*Address:* ${address}\n`;
   msg += `\n*Order:*\n${lines}\n\n*Total: ₹${total}*`;
   if (notes)   msg += `\n\n*Notes:* ${notes}`;
-  return msg;
+
+  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
 }
 
-// ── Validate cart has items ──
+// ── Validate cart ──
 function validateCart() {
   const hasItems = Object.values(cart).some(q => q > 0);
   const err = document.getElementById('errorMsg');
@@ -208,7 +203,24 @@ function validateCart() {
   return true;
 }
 
-// ── Form submit → email via Formspree ──
+// ── Generate QR code ──
+function generateQR() {
+  if (qrGenerated) return; // don't regenerate if nothing changed
+  const container = document.getElementById('qrCode');
+  container.innerHTML = ''; // clear old QR
+  const url = buildWhatsAppUrl();
+  new QRCode(container, {
+    text: url,
+    width: 180,
+    height: 180,
+    colorDark: '#2b1f14',
+    colorLight: '#ffffff',
+    correctLevel: QRCode.CorrectLevel.M
+  });
+  qrGenerated = true;
+}
+
+// ── Email form submit ──
 document.getElementById('orderForm').addEventListener('submit', function (e) {
   if (!validateCart()) { e.preventDefault(); return; }
   setTimeout(() => { document.getElementById('successMsg').style.display = 'block'; }, 800);
@@ -217,8 +229,27 @@ document.getElementById('orderForm').addEventListener('submit', function (e) {
 // ── WhatsApp button ──
 document.getElementById('whatsappBtn').addEventListener('click', function () {
   if (!validateCart()) return;
-  const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(buildWhatsAppMsg())}`;
-  window.open(url, '_blank');
+  window.open(buildWhatsAppUrl(), '_blank');
+});
+
+// ── QR code toggle button ──
+document.getElementById('qrToggleBtn').addEventListener('click', function () {
+  if (!validateCart()) return;
+  const panel = document.getElementById('qrPanel');
+  const btn   = document.getElementById('qrToggleBtn');
+  const isVisible = panel.classList.contains('visible');
+
+  if (isVisible) {
+    panel.classList.remove('visible');
+    btn.classList.remove('active');
+    btn.textContent = '📱 Scan QR Code';
+  } else {
+    generateQR();
+    panel.classList.add('visible');
+    btn.classList.add('active');
+    btn.textContent = '✕ Hide QR Code';
+    panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
 });
 
 // ── Nav scroll highlight ──
