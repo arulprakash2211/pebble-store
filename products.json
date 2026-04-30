@@ -1,50 +1,112 @@
 [
   {
+    "id": "lavender-rose",
     "name": "Lavender & Rose Clay",
+    "category": "Face Care",
     "tag": "Bestseller",
     "price": 180,
     "description": "Calming lavender essential oil with pink rose clay. Perfect for sensitive and dry skin.",
     "emoji": "🌸",
-    "colorClass": "pi1"
+    "colorClass": "pi1",
+    "image": "images/lavender-rose.jpg"
   },
   {
+    "id": "charcoal-neem",
     "name": "Activated Charcoal & Neem",
+    "category": "Face Care",
     "tag": "Detox",
     "price": 200,
     "description": "Deep cleansing charcoal with antibacterial neem. Ideal for oily and acne-prone skin.",
     "emoji": "🌿",
-    "colorClass": "pi2"
+    "colorClass": "pi2",
+    "image": "images/charcoal-neem.jpg"
   },
   {
-    "name": "Honey & Oatmeal",
-    "tag": "Moisturising",
-    "price": 190,
-    "description": "Raw honey and colloidal oatmeal for a creamy, nourishing lather. Great for all skin types.",
-    "emoji": "🍯",
-    "colorClass": "pi3"
-  },
-  {
-    "name": "Eucalyptus & Spearmint",
-    "tag": "Refreshing",
-    "price": 195,
-    "description": "A cooling, invigorating bar with eucalyptus and spearmint essential oils. Perfect morning soap.",
-    "emoji": "🌲",
-    "colorClass": "pi4"
-  },
-  {
+    "id": "turmeric-sandalwood",
     "name": "Turmeric & Sandalwood",
+    "category": "Face Care",
     "tag": "Brightening",
     "price": 210,
     "description": "Traditional turmeric with grounding sandalwood. Brightens and evens skin tone naturally.",
     "emoji": "☀️",
-    "colorClass": "pi5"
+    "colorClass": "pi5",
+    "image": "images/turmeric-sandalwood.jpg"
   },
   {
+    "id": "honey-oatmeal",
+    "name": "Honey & Oatmeal",
+    "category": "Body Care",
+    "tag": "Moisturising",
+    "price": 190,
+    "description": "Raw honey and colloidal oatmeal for a creamy, nourishing lather. Great for all skin types.",
+    "emoji": "🍯",
+    "colorClass": "pi3",
+    "image": "images/honey-oatmeal.jpg"
+  },
+  {
+    "id": "coffee-cocoa",
     "name": "Coffee & Cocoa Butter",
+    "category": "Body Care",
     "tag": "Exfoliating",
     "price": 220,
     "description": "Ground coffee for gentle exfoliation, with rich cocoa butter to leave skin silky smooth.",
     "emoji": "🍂",
-    "colorClass": "pi6"
+    "colorClass": "pi6",
+    "image": "images/coffee-cocoa.jpg"
+  },
+  {
+    "id": "eucalyptus-spearmint",
+    "name": "Eucalyptus & Spearmint",
+    "category": "Body Care",
+    "tag": "Refreshing",
+    "price": 195,
+    "description": "A cooling, invigorating bar with eucalyptus and spearmint essential oils. Perfect morning soap.",
+    "emoji": "🌲",
+    "colorClass": "pi4",
+    "image": "images/eucalyptus-spearmint.jpg"
+  },
+  {
+    "id": "rosemary-mint",
+    "name": "Rosemary & Mint",
+    "category": "Hair Care",
+    "tag": "Strengthening",
+    "price": 230,
+    "description": "Stimulates the scalp with rosemary and peppermint. Reduces hair fall and promotes growth.",
+    "emoji": "🌱",
+    "colorClass": "pi2",
+    "image": "images/rosemary-mint.jpg"
+  },
+  {
+    "id": "amla-shikakai",
+    "name": "Amla & Shikakai",
+    "category": "Hair Care",
+    "tag": "Traditional",
+    "price": 215,
+    "description": "Ancient Indian hair care with amla and shikakai. Cleanses gently while nourishing the scalp.",
+    "emoji": "🪴",
+    "colorClass": "pi3",
+    "image": "images/amla-shikakai.jpg"
+  },
+  {
+    "id": "gift-set-face",
+    "name": "Glow & Go Face Set",
+    "category": "Gift Sets",
+    "tag": "Gift Ready",
+    "price": 550,
+    "description": "A curated trio of our best face soaps — Lavender Rose, Charcoal Neem & Turmeric Sandalwood. Beautifully boxed.",
+    "emoji": "🎁",
+    "colorClass": "pi1",
+    "image": "images/gift-set-face.jpg"
+  },
+  {
+    "id": "gift-set-body",
+    "name": "Pamper Me Body Set",
+    "category": "Gift Sets",
+    "tag": "Gift Ready",
+    "price": 580,
+    "description": "Three indulgent body soaps — Honey Oatmeal, Coffee Cocoa & Eucalyptus Spearmint. Perfect gifting.",
+    "emoji": "🎀",
+    "colorClass": "pi5",
+    "image": "images/gift-set-body.jpg"
   }
 ]
