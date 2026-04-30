@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Handmade by Nature – Artisan Soaps</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream: #f5f0e8;
+      --warm-white: #faf8f3;
+      --bark: #5c3d2e;
+      --moss: #4a5c3a;
+      --clay: #a07850;
+      --sand: #d4b896;
+      --stone: #8a7968;
+      --dark: #2b1f14;
+      --text: #3a2e22;
+      --light-text: #7a6a58;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Jost', sans-serif;
+      background: var(--warm-white);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1.2rem 3rem;
+      background: rgba(245,240,232,0.92);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid rgba(92,61,46,0.12);
+    }
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem;
+      color: var(--bark);
+      letter-spacing: 0.02em;
+      text-decoration: none;
+    }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a {
+      text-decoration: none;
+      font-size: 0.85rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--stone);
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--bark); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      padding: 6rem 3rem 3rem;
+      gap: 4rem;
+      background: var(--cream);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -100px; right: -100px;
+      width: 600px; height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(160,120,80,0.12), transparent 70%);
+      pointer-events: none;
+    }
+    .hero-text { position: relative; z-index: 1; }
+    .hero-eyebrow {
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--clay);
+      font-weight: 500;
+      margin-bottom: 1.2rem;
+      display: flex; align-items: center; gap: 0.8rem;
+    }
+    .hero-eyebrow::before {
+      content: '';
+      display: inline-block;
+      width: 2rem; height: 1px;
+      background: var(--clay);
+    }
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.8rem, 5vw, 4.5rem);
+      line-height: 1.1;
+      color: var(--dark);
+      margin-bottom: 1.5rem;
+    }
+    h1 em { font-style: italic; color: var(--moss); }
+    .hero-desc {
+      font-size: 1.05rem;
+      color: var(--light-text);
+      line-height: 1.8;
+      max-width: 420px;
+      margin-bottom: 2.5rem;
+      font-weight: 300;
+    }
+    .btn {
+      display: inline-block;
+      padding: 0.9rem 2.2rem;
+      background: var(--bark);
+      color: var(--cream);
+      text-decoration: none;
+      font-size: 0.82rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-weight: 500;
+      transition: background 0.25s, transform 0.2s;
+      border: none; cursor: pointer;
+    }
+    .btn:hover { background: var(--dark); transform: translateY(-2px); }
+    .btn-outline {
+      background: transparent;
+      color: var(--bark);
+      border: 1.5px solid var(--bark);
+      margin-left: 1rem;
+    }
+    .btn-outline:hover { background: var(--bark); color: var(--cream); }
+
+    .hero-visual {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      position: relative;
+    }
+    .soap-card-visual {
+      border-radius: 4px;
+      overflow: hidden;
+      aspect-ratio: 3/4;
+      display: flex;
+      align-items: flex-end;
+      padding: 1rem;
+      position: relative;
+      animation: floatUp 0.8s ease both;
+    }
+    .soap-card-visual:nth-child(2) { margin-top: 2rem; animation-delay: 0.1s; }
+    .soap-card-visual:nth-child(3) { margin-top: -1rem; animation-delay: 0.2s; }
+    .soap-card-visual:nth-child(4) { margin-top: 1rem; animation-delay: 0.3s; }
+
+    @keyframes floatUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .sv1 { background: linear-gradient(160deg, #8d6e52, #5c3d2e); }
+    .sv2 { background: linear-gradient(160deg, #4a5c3a, #2e3d25); }
+    .sv3 { background: linear-gradient(160deg, #c4a882, #a07850); }
+    .sv4 { background: linear-gradient(160deg, #6b7c5a, #4a5c3a); }
+
+    .soap-pattern {
+      position: absolute; inset: 0;
+      opacity: 0.15;
+      background-image: repeating-linear-gradient(
+        45deg, rgba(255,255,255,0.3) 0, rgba(255,255,255,0.3) 1px,
+        transparent 0, transparent 50%
+      );
+      background-size: 10px 10px;
+    }
+    .soap-label {
+      font-family: 'Playfair Display', serif;
+      color: rgba(255,255,255,0.9);
+      font-size: 0.9rem;
+      font-style: italic;
+      position: relative; z-index: 1;
+    }
+
+    /* ── ABOUT STRIP ── */
+    .about-strip {
+      background: var(--bark);
+      color: var(--cream);
+      padding: 3rem;
+      display: flex;
+      gap: 3rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .strip-item {
+      text-align: center;
+      min-width: 160px;
+    }
+    .strip-icon { font-size: 1.8rem; margin-bottom: 0.5rem; }
+    .strip-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      margin-bottom: 0.3rem;
+    }
+    .strip-desc { font-size: 0.78rem; opacity: 0.75; letter-spacing: 0.05em; font-weight: 300; }
+
+    /* ── PRODUCTS ── */
+    .products {
+      padding: 6rem 3rem;
+      background: var(--warm-white);
+    }
+    .section-header {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+    .section-eyebrow {
+      font-size: 0.72rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--clay);
+      font-weight: 500;
+      margin-bottom: 0.8rem;
+    }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 3.5vw, 3rem);
+      color: var(--dark);
+      margin-bottom: 1rem;
+    }
+    .section-sub {
+      color: var(--light-text);
+      font-weight: 300;
+      font-size: 1rem;
+      max-width: 500px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 2rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .product-card {
+      background: var(--cream);
+      overflow: hidden;
+      transition: transform 0.3s, box-shadow 0.3s;
+      cursor: pointer;
+    }
+    .product-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 16px 40px rgba(92,61,46,0.15);
+    }
+    .product-img {
+      height: 220px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .product-img .pat { position: absolute; inset: 0; opacity: 0.1; background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.5) 0, rgba(255,255,255,0.5) 1px, transparent 0, transparent 50%); background-size: 8px 8px; }
+    .pi1 { background: linear-gradient(135deg, #c4a0c0, #8b5e8b); }
+    .pi2 { background: linear-gradient(135deg, #4a5c3a, #2e3d25); }
+    .pi3 { background: linear-gradient(135deg, #c4a882, #8d6040); }
+    .pi4 { background: linear-gradient(135deg, #5c7a6a, #3a5248); }
+    .pi5 { background: linear-gradient(135deg, #e8c4a0, #c49070); }
+    .pi6 { background: linear-gradient(135deg, #7a6a5a, #4a3a2e); }
+
+    .product-info { padding: 1.3rem 1.5rem 1.5rem; }
+    .product-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      color: var(--dark);
+      margin-bottom: 0.4rem;
+    }
+    .product-desc {
+      font-size: 0.82rem;
+      color: var(--light-text);
+      line-height: 1.6;
+      font-weight: 300;
+      margin-bottom: 1rem;
+    }
+    .product-price {
+      font-size: 1rem;
+      color: var(--moss);
+      font-weight: 500;
+      letter-spacing: 0.03em;
+    }
+    .product-tag {
+      display: inline-block;
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      background: rgba(74,92,58,0.12);
+      color: var(--moss);
+      padding: 0.2rem 0.6rem;
+      margin-bottom: 0.8rem;
+    }
+
+    /* ── ORDER SECTION ── */
+    .order-section {
+      background: var(--cream);
+      padding: 6rem 3rem;
+    }
+    .order-inner {
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.2rem;
+      margin-top: 2.5rem;
+    }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+    .form-group.full { grid-column: 1 / -1; }
+    label {
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--stone);
+      font-weight: 500;
+    }
+    input, select, textarea {
+      font-family: 'Jost', sans-serif;
+      font-size: 0.95rem;
+      padding: 0.8rem 1rem;
+      border: 1.5px solid rgba(92,61,46,0.2);
+      background: var(--warm-white);
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.2s;
+      width: 100%;
+      appearance: none;
+      border-radius: 0;
+    }
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--clay);
+    }
+    textarea { resize: vertical; min-height: 100px; }
+    .form-submit { margin-top: 1.5rem; }
+    .form-submit .btn { width: 100%; text-align: center; padding: 1rem; font-size: 0.9rem; }
+    .success-msg {
+      display: none;
+      background: var(--moss);
+      color: white;
+      padding: 1rem 1.5rem;
+      margin-top: 1rem;
+      font-size: 0.9rem;
+      text-align: center;
+    }
+
+    /* ── ABOUT ── */
+    .about {
+      padding: 6rem 3rem;
+      background: var(--warm-white);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: center;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .about-visual {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    .about-block {
+      aspect-ratio: 1;
+      border-radius: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+    }
+    .ab1 { background: linear-gradient(135deg, #d4b896, #a07850); }
+    .ab2 { background: var(--bark); margin-top: 1.5rem; }
+    .ab3 { background: var(--moss); margin-top: -1.5rem; }
+    .ab4 { background: linear-gradient(135deg, #8a7968, #5c3d2e); }
+
+    .about-text h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.8rem, 3vw, 2.6rem);
+      color: var(--dark);
+      line-height: 1.2;
+      margin-bottom: 1.5rem;
+    }
+    .about-text p {
+      color: var(--light-text);
+      font-weight: 300;
+      line-height: 1.8;
+      margin-bottom: 1rem;
+      font-size: 0.97rem;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--dark);
+      color: rgba(245,240,232,0.7);
+      padding: 3rem;
+      text-align: center;
+    }
+    .footer-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      color: var(--sand);
+      margin-bottom: 1rem;
+    }
+    .footer-links { display: flex; gap: 2rem; justify-content: center; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .footer-links a {
+      color: rgba(245,240,232,0.6);
+      text-decoration: none;
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--sand); }
+    .footer-copy { font-size: 0.75rem; opacity: 0.5; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { gap: 1rem; }
+      .nav-links a { font-size: 0.75rem; }
+      .hero { grid-template-columns: 1fr; padding: 5rem 1.5rem 3rem; gap: 2.5rem; }
+      .hero-visual { display: none; }
+      .about { grid-template-columns: 1fr; gap: 2rem; padding: 4rem 1.5rem; }
+      .about-visual { display: none; }
+      .products { padding: 4rem 1.5rem; }
+      .form-grid { grid-template-columns: 1fr; }
+      .order-section { padding: 4rem 1.5rem; }
+      .about-strip { gap: 2rem; padding: 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a class="nav-logo" href="#">Handmade by Nature</a>
+    <ul class="nav-links">
+      <li><a href="#products">Soaps</a></li>
+      <li><a href="#about">Our Story</a></li>
+      <li><a href="#order">Order</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-text">
+      <p class="hero-eyebrow">Small batch · All natural</p>
+      <h1>Soaps crafted by<br/><em>nature's touch</em></h1>
+      <p class="hero-desc">Every bar is handmade with love using plant-based oils, botanicals, and zero harsh chemicals. Good for your skin, gentle on the earth.</p>
+      <div>
+        <a href="#order" class="btn">Place an Order</a>
+        <a href="#products" class="btn btn-outline">See Soaps</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="soap-card-visual sv1"><div class="soap-pattern"></div><span class="soap-label">Cedarwood</span></div>
+      <div class="soap-card-visual sv2"><div class="soap-pattern"></div><span class="soap-label">Forest Herb</span></div>
+      <div class="soap-card-visual sv3"><div class="soap-pattern"></div><span class="soap-label">Honey Oat</span></div>
+      <div class="soap-card-visual sv4"><div class="soap-pattern"></div><span class="soap-label">Eucalyptus</span></div>
+    </div>
+  </section>
+
+  <!-- STRIP -->
+  <div class="about-strip">
+    <div class="strip-item"><div class="strip-icon">🌿</div><div class="strip-title">100% Natural</div><div class="strip-desc">No parabens or synthetics</div></div>
+    <div class="strip-item"><div class="strip-icon">🤲</div><div class="strip-title">Handcrafted</div><div class="strip-desc">Every bar made by hand</div></div>
+    <div class="strip-item"><div class="strip-icon">🐰</div><div class="strip-title">Cruelty Free</div><div class="strip-desc">Never tested on animals</div></div>
+    <div class="strip-item"><div class="strip-icon">📦</div><div class="strip-title">Made to Order</div><div class="strip-desc">Fresh, never mass produced</div></div>
+  </div>
+
+  <!-- PRODUCTS -->
+  <section class="products" id="products">
+    <div class="section-header">
+      <p class="section-eyebrow">Our Collection</p>
+      <h2 class="section-title">Handcrafted Soaps</h2>
+      <p class="section-sub">Each bar is cold-process made, cured for 4 weeks, and packed with skin-loving ingredients.</p>
+    </div>
+    <div class="products-grid" id="productsGrid">
+      <!-- Products are loaded dynamically from products.json -->
+      <p style="color:var(--light-text); font-size:0.9rem;">Loading products…</p>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="about">
+      <div class="about-visual">
+        <div class="about-block ab1">🌿</div>
+        <div class="about-block ab2">🧼</div>
+        <div class="about-block ab3">🌸</div>
+        <div class="about-block ab4">🍯</div>
+      </div>
+      <div class="about-text">
+        <h2>Made with<br/><em style="font-style:italic; color:var(--moss)">patience & purpose</em></h2>
+        <p>We started making soap in our kitchen, frustrated by store-bought bars full of chemicals we couldn't pronounce. What began as an experiment became a passion.</p>
+        <p>Every bar is cold-process made in small batches, cured for a full 4 weeks, and packed only with ingredients we'd happily put on our own family's skin — botanical oils, essential oils, clays, and natural colorants.</p>
+        <p>No shortcuts. No fillers. Just honest soap.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ORDER FORM -->
+  <section class="order-section" id="order">
+    <div class="order-inner">
+      <div class="section-header">
+        <p class="section-eyebrow">Place an Order</p>
+        <h2 class="section-title">Order Your Soaps</h2>
+        <p class="section-sub">Fill in your details and we'll get back to you within 24 hours to confirm your order and payment.</p>
+      </div>
+
+      <!-- 
+        HOW TO SET UP FORMSPREE:
+        1. Go to https://formspree.io and sign up for free
+        2. Create a new form and get your form ID (looks like: xyzabcde)
+        3. Replace "YOUR_FORMSPREE_ID" in the action URL below with your actual ID
+        Example: action="https://formspree.io/f/xyzabcde"
+      -->
+      <form id="orderForm" action="https://formspree.io/f/YOUR_FORMSPREE_ID" method="POST">
+        <div class="form-grid">
+
+          <div class="form-group">
+            <label for="name">Full Name *</label>
+            <input type="text" id="name" name="name" placeholder="Your name" required />
+          </div>
+
+          <div class="form-group">
+            <label for="phone">Phone Number *</label>
+            <input type="tel" id="phone" name="phone" placeholder="+91 00000 00000" required />
+          </div>
+
+          <div class="form-group full">
+            <label for="email">Email Address *</label>
+            <input type="email" id="email" name="email" placeholder="your@email.com" required />
+          </div>
+
+          <div class="form-group full">
+            <label for="product">Soap Selection *</label>
+            <select id="product" name="product" required>
+              <option value="" disabled selected>Choose a soap…</option>
+              <!-- Options populated dynamically from products.json -->
+              <option>Multiple / Mixed – mention below</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="quantity">Quantity *</label>
+            <input type="number" id="quantity" name="quantity" placeholder="e.g. 2" min="1" required />
+          </div>
+
+          <div class="form-group">
+            <label for="pincode">Pincode</label>
+            <input type="text" id="pincode" name="pincode" placeholder="For shipping estimate" />
+          </div>
+
+          <div class="form-group full">
+            <label for="address">Delivery Address *</label>
+            <textarea id="address" name="address" placeholder="Full delivery address including city and state" required></textarea>
+          </div>
+
+          <div class="form-group full">
+            <label for="notes">Special Notes</label>
+            <textarea id="notes" name="notes" placeholder="Any special requests, gifting notes, or questions…"></textarea>
+          </div>
+
+        </div>
+        <div class="form-submit">
+          <button type="submit" class="btn">Send My Order →</button>
+        </div>
+        <div class="success-msg" id="successMsg">
+          🌿 Thank you! Your order has been received. We'll contact you within 24 hours.
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">Handmade by Nature</div>
+    <div class="footer-links">
+      <a href="#products">Soaps</a>
+      <a href="#about">Our Story</a>
+      <a href="#order">Order</a>
+    </div>
+    <p class="footer-copy">© 2025 Handmade by Nature · Made with 🌿 and lots of love</p>
+  </footer>
+
+  <script>
+    // ── Load products from products.json ──
+    async function loadProducts() {
+      const grid = document.getElementById('productsGrid');
+      const select = document.getElementById('product');
+
+      try {
+        const res = await fetch('products.json');
+        if (!res.ok) throw new Error('Could not load products.json');
+        const products = await res.json();
+
+        // Render product cards
+        grid.innerHTML = products.map(p => `
+          <div class="product-card">
+            <div class="product-img ${p.colorClass}">
+              <div class="pat"></div>${p.emoji}
+            </div>
+            <div class="product-info">
+              <span class="product-tag">${p.tag}</span>
+              <div class="product-name">${p.name}</div>
+              <div class="product-desc">${p.description}</div>
+              <div class="product-price">₹${p.price} / bar</div>
+            </div>
+          </div>
+        `).join('');
+
+        // Populate order dropdown (insert before the last "Multiple/Mixed" option)
+        const mixedOption = select.querySelector('option:last-child');
+        products.forEach(p => {
+          const opt = document.createElement('option');
+          opt.value = `${p.name} – ₹${p.price}`;
+          opt.textContent = `${p.name} – ₹${p.price}`;
+          select.insertBefore(opt, mixedOption);
+        });
+
+      } catch (err) {
+        grid.innerHTML = '<p style="color:var(--clay)">⚠️ Could not load products. Make sure products.json is in the same folder.</p>';
+        console.error(err);
+      }
+    }
+
+    loadProducts();
+
+    // ── Handle order form submission ──
+    const form = document.getElementById('orderForm');
+    const successMsg = document.getElementById('successMsg');
+
+    form.addEventListener('submit', function(e) {
+      if (form.action.includes('YOUR_FORMSPREE_ID')) {
+        e.preventDefault();
+        successMsg.style.display = 'block';
+        successMsg.textContent = '⚠️ Demo mode: Replace YOUR_FORMSPREE_ID in the form action with your actual Formspree ID.';
+        return;
+      }
+      setTimeout(() => { successMsg.style.display = 'block'; }, 500);
+    });
+
+    // ── Smooth nav highlight on scroll ──
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.nav-links a');
+    window.addEventListener('scroll', () => {
+      let current = '';
+      sections.forEach(s => {
+        if (window.scrollY >= s.offsetTop - 120) current = s.id;
+      });
+      navLinks.forEach(a => {
+        a.style.color = a.getAttribute('href') === '#' + current ? 'var(--bark)' : '';
+      });
+    });
+  </script>
+</body>
+</html>
