@@ -337,7 +337,7 @@
         2. Create a new form → copy the ID (e.g. xabcde12)
         3. Replace YOUR_FORMSPREE_ID below with your actual ID
       -->
-      <form id="orderForm" action="https://formspree.io/f/xdabogzl" method="POST">
+      <form id="orderForm" action="https://formspree.io/f/YOUR_FORMSPREE_ID" method="POST">
 
         <!-- Hidden field — carries selected products into the email -->
         <input type="hidden" id="selectedProductsField" name="selected_products" value="" />
@@ -534,13 +534,8 @@
       document.getElementById('selectedProductsField').value +=
         ` | Qty: ${qty}`;
 
-      if (form.action.includes('xdabogzl')) {
-        e.preventDefault();
-        successMsg.style.display = 'block';
-        successMsg.textContent = '⚠️ Demo mode: Replace YOUR_FORMSPREE_ID in index.html with your actual Formspree ID.';
-        return;
-      }
-      setTimeout(() => { successMsg.style.display = 'block'; }, 500);
+      // Let Formspree handle the submission
+      setTimeout(() => { successMsg.style.display = 'block'; }, 1000);
     });
 
     // ── Nav scroll highlight ──
