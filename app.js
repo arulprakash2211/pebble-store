@@ -1,18 +1,30 @@
-/* ── PEBBLE STORE – App Logic ── */
+/* ═══════════════════════════════════════
+   PEBBLE STORE – app.js
+   ═══════════════════════════════════════ */
 
 const WHATSAPP_NUMBER = '919659451260';
 
 let allProducts = [];
-const cart = {}; // productId -> quantity
-let qrGenerated = false;
+const cart = {};
+const isMobile = /Android|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i.test(navigator.userAgent);
 
-// ── Load products from products.json ──
+// ── Boot: show correct UI for device ──
+function initDevice() {
+  if (isMobile) {
+    document.getElementById('mobileActions').style.display = 'block';
+  } else {
+    document.getElementById('desktopActions').style.display = 'block';
+    generateQR(); // show QR on page load for desktop
+  }
+}
+
+// ── Load products.json ──
 async function loadProducts() {
   const grid = document.getElementById('productsGrid');
   const filtersEl = document.getElementById('categoryFilters');
   try {
     const res = await fetch('products.json');
-    if (!res.ok) throw new Error('Failed to load products.json');
+    if (!res.ok) throw new Error('Failed');
     allProducts = await res.json();
 
     const categories = ['All', ...new Set(allProducts.map(p => p.category))];
@@ -24,10 +36,7 @@ async function loadProducts() {
       btn.addEventListener('click', () => {
         filtersEl.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        const filtered = btn.dataset.cat === 'All'
-          ? allProducts
-          : allProducts.filter(p => p.category === btn.dataset.cat);
-        renderProducts(filtered);
+        renderProducts(btn.dataset.cat === 'All' ? allProducts : allProducts.filter(p => p.category === btn.dataset.cat));
       });
     });
 
@@ -76,7 +85,7 @@ function renderProducts(products) {
   }).join('');
 }
 
-// ── Change qty on a card ──
+// ── Change qty ──
 function changeQty(id, delta) {
   const newQty = Math.max(0, (cart[id] || 0) + delta);
   if (newQty === 0) delete cart[id]; else cart[id] = newQty;
@@ -85,7 +94,7 @@ function changeQty(id, delta) {
   if (qtyEl) qtyEl.textContent = newQty;
   if (btnEl) { btnEl.textContent = newQty > 0 ? '✓ Added' : 'Add to Order'; btnEl.classList.toggle('selected', newQty > 0); }
   updateSummary();
-  qrGenerated = false; // reset QR so it regenerates with new order
+  if (!isMobile) refreshQR();
 }
 
 // ── Add to order ──
@@ -98,7 +107,7 @@ function addToOrder(id) {
     if (btnEl) { btnEl.textContent = '✓ Added'; btnEl.classList.add('selected'); }
   }
   updateSummary();
-  qrGenerated = false;
+  if (!isMobile) refreshQR();
   document.getElementById('order').scrollIntoView({ behavior: 'smooth' });
 }
 
@@ -110,10 +119,10 @@ function removeFromCart(id) {
   if (qtyEl) qtyEl.textContent = 0;
   if (btnEl) { btnEl.textContent = 'Add to Order'; btnEl.classList.remove('selected'); }
   updateSummary();
-  qrGenerated = false;
+  if (!isMobile) refreshQR();
 }
 
-// ── Update order summary table ──
+// ── Update order summary ──
 function updateSummary() {
   const container = document.getElementById('summaryContent');
   const items = Object.entries(cart).filter(([, q]) => q > 0);
@@ -190,6 +199,31 @@ function buildWhatsAppUrl() {
   return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
 }
 
+// ── Generate / refresh QR code ──
+function generateQR() {
+  const container = document.getElementById('qrCode');
+  container.innerHTML = '';
+  new QRCode(container, {
+    text: `https://wa.me/${WHATSAPP_NUMBER}`,
+    width: 180, height: 180,
+    colorDark: '#2b1f14', colorLight: '#ffffff',
+    correctLevel: QRCode.CorrectLevel.M
+  });
+}
+
+function refreshQR() {
+  // Only regenerate if QR library is loaded
+  if (typeof QRCode === 'undefined') return;
+  const container = document.getElementById('qrCode');
+  container.innerHTML = '';
+  new QRCode(container, {
+    text: buildWhatsAppUrl(),
+    width: 180, height: 180,
+    colorDark: '#2b1f14', colorLight: '#ffffff',
+    correctLevel: QRCode.CorrectLevel.M
+  });
+}
+
 // ── Validate cart ──
 function validateCart() {
   const hasItems = Object.values(cart).some(q => q > 0);
@@ -203,54 +237,81 @@ function validateCart() {
   return true;
 }
 
-// ── Generate QR code ──
-function generateQR() {
-  if (qrGenerated) return; // don't regenerate if nothing changed
-  const container = document.getElementById('qrCode');
-  container.innerHTML = ''; // clear old QR
-  const url = buildWhatsAppUrl();
-  new QRCode(container, {
-    text: url,
-    width: 180,
-    height: 180,
-    colorDark: '#2b1f14',
-    colorLight: '#ffffff',
-    correctLevel: QRCode.CorrectLevel.M
+// ── Show success page ──
+function showSuccessPage() {
+  const items = Object.entries(cart).filter(([, q]) => q > 0);
+  let total = 0;
+
+  const rows = items.map(([id, qty]) => {
+    const p = allProducts.find(x => x.id === id);
+    if (!p) return '';
+    const sub = p.price * qty;
+    total += sub;
+    return `<div class="success-order-row">
+      <span>${p.emoji} ${p.name} × ${qty}</span>
+      <span>₹${sub}</span>
+    </div>`;
+  }).filter(Boolean).join('');
+
+  document.getElementById('successOrderDetails').innerHTML = rows;
+  document.getElementById('successTotal').innerHTML = `<span>Total</span><span>₹${total}</span>`;
+
+  // Swap views
+  document.getElementById('orderFormView').style.display = 'none';
+  document.getElementById('orderSuccessView').style.display = 'block';
+  document.getElementById('order').scrollIntoView({ behavior: 'smooth' });
+}
+
+// ── Reset order (go back to browse) ──
+function resetOrder() {
+  // Clear cart
+  Object.keys(cart).forEach(id => {
+    delete cart[id];
+    const qtyEl = document.getElementById('qty-' + id);
+    const btnEl = document.getElementById('btn-' + id);
+    if (qtyEl) qtyEl.textContent = 0;
+    if (btnEl) { btnEl.textContent = 'Add to Order'; btnEl.classList.remove('selected'); }
   });
-  qrGenerated = true;
+  updateSummary();
+  document.getElementById('orderForm').reset();
+  document.getElementById('orderSuccessView').style.display = 'none';
+  document.getElementById('orderFormView').style.display = 'block';
+  if (!isMobile) refreshQR();
+  document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
 }
 
 // ── Email form submit ──
 document.getElementById('orderForm').addEventListener('submit', function (e) {
   if (!validateCart()) { e.preventDefault(); return; }
-  setTimeout(() => { document.getElementById('successMsg').style.display = 'block'; }, 800);
+  // Let Formspree handle it, then show success page
+  e.preventDefault();
+
+  const formData = new FormData(this);
+  fetch(this.action, {
+    method: 'POST',
+    body: formData,
+    headers: { 'Accept': 'application/json' }
+  }).then(res => {
+    if (res.ok) {
+      showSuccessPage();
+    } else {
+      alert('Something went wrong. Please try again or use WhatsApp to order.');
+    }
+  }).catch(() => {
+    alert('Network error. Please check your connection and try again.');
+  });
 });
 
-// ── WhatsApp button ──
-document.getElementById('whatsappBtn').addEventListener('click', function () {
-  if (!validateCart()) return;
-  window.open(buildWhatsAppUrl(), '_blank');
-});
-
-// ── QR code toggle button ──
-document.getElementById('qrToggleBtn').addEventListener('click', function () {
-  if (!validateCart()) return;
-  const panel = document.getElementById('qrPanel');
-  const btn   = document.getElementById('qrToggleBtn');
-  const isVisible = panel.classList.contains('visible');
-
-  if (isVisible) {
-    panel.classList.remove('visible');
-    btn.classList.remove('active');
-    btn.textContent = '📱 Scan QR Code';
-  } else {
-    generateQR();
-    panel.classList.add('visible');
-    btn.classList.add('active');
-    btn.textContent = '✕ Hide QR Code';
-    panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  }
-});
+// ── WhatsApp button (mobile) ──
+const waBtn = document.getElementById('whatsappBtn');
+if (waBtn) {
+  waBtn.addEventListener('click', function () {
+    if (!validateCart()) return;
+    window.open(buildWhatsAppUrl(), '_blank');
+    // Show success after short delay (they've been redirected to WA)
+    setTimeout(showSuccessPage, 800);
+  });
+}
 
 // ── Nav scroll highlight ──
 const navSections = document.querySelectorAll('section[id]');
@@ -263,3 +324,4 @@ window.addEventListener('scroll', () => {
 
 // ── Init ──
 loadProducts();
+initDevice();
